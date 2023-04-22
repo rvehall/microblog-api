@@ -1,6 +1,10 @@
-from app import app, db
-from app.models import Post
+from app import app
 import app.services as service
+
+
+@app.route('/', methods=['GET'])
+def hello_world():
+    return "Hello, world!"
 
 @app.route('/posts', methods=['GET'])
 def get_posts():

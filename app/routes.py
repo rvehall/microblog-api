@@ -3,7 +3,7 @@ import app.services as service
 
 
 @app.route('/', methods=['GET'])
-def hello_world():
+def default():
     return "Hello, world!"
 
 @app.route('/posts', methods=['GET'])

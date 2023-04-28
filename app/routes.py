@@ -13,3 +13,7 @@ def get_posts():
 @app.route('/posts', methods=['Post'])
 def post_post():
     return service.generate_posts()
+
+@app.route('/posts/<id>', methods=['Delete'])
+def delete_post(id):
+    return service.delete_post(id)

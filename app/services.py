@@ -14,9 +14,8 @@ def get_posts():
 def generate_posts():
     if not has_been_created_today() :
         generator = pipeline(task='text-generation', model='gpt2')
-        content_list = generator("The software engineering")
-        for content in content_list:
-            post_to_db(content["generated_text"])
+        content = generator("The software engineering")
+        post_to_db(content[0]["generated_text"])
         return content
     
     return []

@@ -3,7 +3,6 @@ from app import db
 from datetime import datetime
 from transformers import pipeline
 
-
 def get_posts():
     posts = list(Post.query.all())
     data = []
@@ -13,27 +12,31 @@ def get_posts():
     return data
 
 def generate_posts():
-    if check_if_created():
+    if not has_been_created_today() :
         generator = pipeline(task='text-generation', model='gpt2')
-        content = generator("The software engineering industry is rapidly evolving.", num_return_sequences=5, return_full_text=True)
-
-        for text in content:
-            post_to_db(text)
-
+        content_list = generator("The software engineering")
+        for content in content_list:
+            post_to_db(content["generated_text"])
         return content
     
     return []
 
-def post_to_db(post):
+def post_to_db(text):
     try:
-        p = Post(content=post["generated_text"], created_date=datetime.now())
+        p = Post(content=text.rsplit('.', 1)[0] + ".", created_date=datetime.now())
         db.session.add(p)
         db.session.commit()
         return "Success"
     except Exception as e:
         return str(e)
 
-def check_if_created():
-    post = Post.query.filter_by(created_date=datetime.today()).first()
+def has_been_created_today():
+    return Post.query.filter_by(created_date=datetime.today()).first()
 
-    return post
+def delete_post(id):
+    try:
+        Post.query.filter_by(id=id).delete()
+        db.session.commit()
+        return "Success"
+    except Exception as e:
+        return str(e)
